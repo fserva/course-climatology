@@ -12,6 +12,9 @@ sigma = 5.67*1E-08 # Boltzmann constant
 dt = 1 # delta for time
 dl = 2*1E-04 # delta for solar 'constant'
 ns = 5000 # number steps
+rcp = 0.278 # R/cp
+prad0 = 850. # from >0 to 1000
+perc_ghg = 1E-5 # prad decrease due to daisies
 
 # Define array of solar constants
 l_a = (0.2+np.arange(ns)*dl)*l_o
@@ -45,9 +48,11 @@ bd   = np.zeros(ns,dtype='f') # black daisies fraction
 wd   = np.zeros(ns,dtype='f') # white daisies fraction
 xx   = np.zeros(ns,dtype='f') # bare ground fraction
 aa   = np.zeros(ns,dtype='f') # Daisyworld albedo
+t_r  = np.zeros(ns,dtype='f') # Radiation temp
 t_d  = np.zeros(ns,dtype='f') # Daisyworld temp
 bdg  = np.zeros(ns,dtype='f') # black daisies growth
 wdg  = np.zeros(ns,dtype='f') # white daisies growth
+prad = np.zeros(ns,dtype='f') # pressure radiation
 
 
 # Set initial conditions
@@ -55,10 +60,11 @@ bd[0]   = 0.01
 wd[0]   = 0.01 
 xx[0]   = 1.-bd[0]-wd[0]
 aa[0]   = bs_a
-t_d[0]  = ((l_a[0]*(1-aa[0])/sigma)**0.25)-273.
+t_r[0]  = ((l_a[0]*(1-aa[0])/sigma)**0.25)-273.
+t_d[0]  = ((t_r[0]+273)*((1000./prad0)**rcp))-273.
 t_bd[0] = t_d[0] 
 t_wd[0] = t_d[0]
-
+prad[0] = prad0
 
 # Loop over time
 it = 1
@@ -93,8 +99,12 @@ while it < ns:
     xx[it] = 1. - bd[it] - wd[it]
     aa[it] = (xx[it]*bs_a) + (bd_a*bd[it]) + (wd_a*wd[it])
     
-    # Equilibrium
-    t_d[it] = ((l_a[it]*(1-aa[it])/sigma)**0.25) - 273.
+    # Effect of daisies GHG removal
+    prad[it] =  prad[it-1]*(1.-(perc_ghg*(bd[it]+wd[it]))) # is it meaningful?
+
+    # Equilibrium (with greenhouse effect)
+    t_r[it] = ((l_a[it]*(1-aa[it])/sigma)**0.25) - 273.
+    t_d[it]  = ((t_r[it]+273)*((1000./prad[it])**rcp))-273.
     t_wd[it] = t_d[it]
     t_bd[it] = t_d[it]
 
@@ -112,25 +122,33 @@ f_in = l_a*(1-aa)
 
 t_neut = (l_a*(1-bs_a)/sigma)**0.25
 
-plt.figure(figsize=(5,6))
-plt.subplot(3,1,1,)
+plt.figure(figsize=(7,6))
+plt.subplot(4,1,1,)
 plt.plot(l_a,xx,'gray',label='bare')
 plt.plot(l_a,bd,'black',label='black')
 plt.plot(l_a,wd,'yellow',label='white')
 plt.ylabel('Area fraction (0-1)')
-plt.title(population)
+plt.title(population + ' prad0= '+str(int(prad0)))
 plt.legend()
 
-plt.subplot(3,1,2)
+plt.subplot(4,1,2)
 plt.plot(l_a,aa,'k')
 plt.ylabel('Albedo (0-1)')
 
-plt.subplot(3,1,3)
+plt.subplot(4,1,3)
 plt.plot(l_a,t_d,'k-',label='actual')
-plt.plot(l_a,t_neut-273.,'k:',label='bare')
+plt.plot(l_a,t_neut-273.,'k:',label='bare (no atmo)')
 plt.ylabel('Temperature (degC)')
 plt.xlabel('stellar luminosity (W/m2)')
 plt.legend()
+
+plt.subplot(4,1,4)
+plt.plot(l_a,prad,'k-')
+plt.plot(l_a,[prad0]*len(l_a),'k:',label='Initial prad')
+plt.ylabel('prad (mbar)')
+plt.xlabel('stellar luminosity (W/m2)')
+plt.legend()
+
 
 
 plt.show()
