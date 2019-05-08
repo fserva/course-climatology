@@ -100,7 +100,7 @@ while it < ns:
     aa[it] = (xx[it]*bs_a) + (bd_a*bd[it]) + (wd_a*wd[it])
     
     # Effect of daisies GHG removal
-    prad[it] =  prad[it-1]*(1.-(perc_ghg*(bd[it]+wd[it]))) # is it meaningful?
+    prad[it] =  prad[it-1]*(1.+(perc_ghg*(bd[it]+wd[it]))) # is it meaningful?
 
     # Equilibrium (with greenhouse effect)
     t_r[it] = ((l_a[it]*(1-aa[it])/sigma)**0.25) - 273.
