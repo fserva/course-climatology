@@ -8,7 +8,6 @@ make_maps = False  # Show global maps
 make_ts   = True   # Show zonal averages
 dgrid = 2.5        # ERBE data resolution (degrees)
 r_e = 6.371*1E6    # Earth radius (m)
-l_o = 1361. # W/m2
 
 # Define a Basemap object for plotting
 def map_setup(lon1,lon2,lat1,lat2,col_con,col_lake,col_sea,col_bound):
