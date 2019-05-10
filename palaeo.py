@@ -39,7 +39,7 @@ def fft(time,ts):
     if ((len(time) % 2) == 0):
         nfreqs = int(len(time)/2) + 1 
     else:
-        nfreqs = int(len(time) + 1)/2
+        nfreqs = int((len(time) + 1)/2)
 
     fft_ts = np.zeros(nfreqs,dtype='float')
 

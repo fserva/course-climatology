@@ -14,7 +14,7 @@ dl = 2*1E-04 # delta for solar 'constant'
 ns = 5000 # number steps
 rcp = 0.278 # R/cp
 prad0 = 850. # from >0 to 1000
-perc_ghg = 1E-5 # prad decrease due to daisies
+perc_ghg = 1E-5 # prad increase due to daisies
 
 # Define array of solar constants
 l_a = (0.2+np.arange(ns)*dl)*l_o
@@ -99,8 +99,8 @@ while it < ns:
     xx[it] = 1. - bd[it] - wd[it]
     aa[it] = (xx[it]*bs_a) + (bd_a*bd[it]) + (wd_a*wd[it])
     
-    # Effect of daisies GHG removal
-    prad[it] =  prad[it-1]*(1.+(perc_ghg*(bd[it]+wd[it]))) # is it meaningful?
+    # Effect of daisies GHG removal (with capping)
+    prad[it] =  min(1000,prad[it-1]*(1.+(perc_ghg*(bd[it]+wd[it])))) # is it meaningful?
 
     # Equilibrium (with greenhouse effect)
     t_r[it] = ((l_a[it]*(1-aa[it])/sigma)**0.25) - 273.
