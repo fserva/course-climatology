@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 
 # Setup parameters and constants
-make_maps = False  # Show global maps
-make_ts   = True   # Show zonal averages
+make_maps = True  # Show global maps
+make_ts   = False   # Show zonal averages
 dgrid = 2.5        # ERBE data resolution (degrees)
 r_e = 6.371*1E6    # Earth radius (m)
 
@@ -84,13 +84,15 @@ for ind in range(len(lat_2d)):
     alb_rg[lon_ind,lat_ind] = alb_2d[ind]
 
 # Compute incoming shortwave
-sw_in=((100.-alb_rg)/alb_rg)*sw_rg
+sw_in=100.*sw_rg/alb_rg 
+#((100.-alb_rg)/alb_rg)*sw_rg ??
 
 if make_maps is True:
 
     alb_levs = np.linspace(0,50,11)
     sw_levs  = np.linspace(50,250,11)
-    in_levs  = np.linspace(200,400,11)
+    in_levs  = np.linspace(200,500,11)
+    abs_levs = np.linspace(100,400,11)
     #lw_levs  = ... TODO
 
     plt.figure()
@@ -113,6 +115,14 @@ if make_maps is True:
                  levels=in_levs,cmap='Oranges',extend='max')
     plt.colorbar(orientation='horizontal')
     plt.title('Incoming SW [W/m2]')
+
+    plt.figure()
+    map_setup(0,360,-90,90,'none','none','none','black')
+    plt.contourf(lon_rg,lat_rg,(sw_in*(100-alb_rg)/100).T,
+                 levels=abs_levs,cmap='Oranges',extend='max')
+    plt.colorbar(orientation='horizontal')
+    plt.title('(1-A) SW [W/m2]')
+
 
 
 
@@ -160,15 +170,17 @@ if make_ts is True:
     plt.ylim([-20,20])
     plt.xlabel('Month')
     plt.ylabel('Avg flux [W/m2]')
+    plt.axhline(0,color='k')
     plt.legend()
 
     plt.figure()
-    plt.plot(lat_1d,abs_ann)
+    plt.plot(lat_1d,abs_ann,label='abs')
     plt.plot(lat_1d,olr_1d[:,13],label='olr')
     plt.plot(lat_1d,net_1d[:,13],label='net')
     plt.plot(lat_1d,abs_ann-olr_1d[:,13],label='abs-olr')
     plt.xlabel('Latitude [deg]')
     plt.ylabel('Flux [W/m2]')
+    plt.axhline(0,color='k')
     plt.legend()
 
 
