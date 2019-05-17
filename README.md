@@ -7,4 +7,5 @@ Contents of the lessons (list being updated):
 - Daisyworld
 - Palaeoclimate
 - Radiation budget
+- Atmosphere and ocean climatology
 

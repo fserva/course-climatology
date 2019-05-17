@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 
 # Setup parameters and constants
-make_maps = True  # Show global maps
-make_ts   = False   # Show zonal averages
+make_maps = False  # Show global maps
+make_ts   = True   # Show zonal averages
 dgrid = 2.5        # ERBE data resolution (degrees)
 r_e = 6.371*1E6    # Earth radius (m)
 
