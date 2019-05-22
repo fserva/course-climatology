@@ -5,7 +5,8 @@ import netCDF4 as nc4
 from mpl_toolkits.basemap import Basemap
 
 # Setup parameters and constants
-#make_atmos = False  # Atmospheric analysis
+make_clim = False  # Climatology
+make_tran = True # Transport
 l_e = 2.5E+6 # latent heat vaporization
 rcp = 0.285 # R/Cp
 cp  = 1004. # J/kg/K
@@ -60,83 +61,129 @@ for itim in range(len(tim)):
 
 # TODO add other vars
 ta_am, ta_zm, ta_pp, ta_ss = comp_stat(ta)
+va_am, va_zm, va_pp, va_ss = comp_stat(va)
 theta_am, theta_zm, theta_pp, theta_ss = comp_stat(theta)
 thetae_am, thetae_zm, thetae_pp, thetae_ss = comp_stat(thetae)
-
-# Zonal mean plot of temperature(s)
-plt.figure()
-imon = 0 # CHANGEME (0 = Jan, 11 = Dec)
-cont_t_plot = plt.contour(lat,lev,ta_zm[imon,:,:],np.linspace(200,300,11),colors='k')
-plt.clabel(cont_t_plot,fmt='%1.0i')
-plt.contourf(lat,lev,theta_zm[imon,:,:],np.linspace(250,450,11))
-plt.yscale('log',basey=10)
-plt.ylim([1000,100])
-plt.title('Temperature month= %i' % (imon+1))
-plt.colorbar()
-plt.xlabel('Latitude (deg)')
-plt.ylabel('Pressure (mb)')
+ta_va_am, ta_va_zm, ta_va_pp, ta_va_ss = comp_stat(ta*va)
 
 
-# Lon/lat wind plot
-plt.figure()
-imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
-jlev = 20 # CHANGEME (0 = 1 mb, 22 = 1000 mb)
-quiv_int = 5
-map_setup(0,360,-90,90,'none','none','none','black')
-plt.contourf(lon,lat,np.sqrt(ua[imon,jlev,:,:]**2+va[imon,jlev,:,:]**2),levels=np.arange(10)*2,cmap='Reds')
-plt.colorbar(orientation='horizontal')
-scale_arr = 1
-wnd_map = plt.quiver(lon,lat,ua[imon,jlev,:,:],va[imon,jlev,:,:],units='xy')
-plt.quiverkey(wnd_map,0.9,1.1,scale_arr,str(scale_arr))
-plt.title('Winds month= %i @ %i mb' % (imon+1,lev[jlev]))
+if make_clim is True: 
+
+    # Zonal mean plot of temperature(s)
+    plt.figure()
+    imon = 0 # CHANGEME (0 = Jan, 11 = Dec)
+    cont_t_plot = plt.contour(lat,lev,ta_zm[imon,:,:],np.linspace(200,300,11),colors='k')
+    plt.clabel(cont_t_plot,fmt='%1.0i')
+    plt.contourf(lat,lev,theta_zm[imon,:,:],np.linspace(250,450,11))
+    plt.yscale('log',basey=10)
+    plt.ylim([1000,100])
+    plt.title('Temperature month= %i' % (imon+1))
+    plt.colorbar()
+    plt.xlabel('Latitude (deg)')
+    plt.ylabel('Pressure (mb)')
 
 
-# Lon/lat temperature plot
-plt.figure()
-imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
-jlev = 22 # CHANGEME (0 = 1 mb, 22 = 1000 mb)
-map_setup(0,360,-90,90,'none','none','none','black')
-plt.contourf(lon,lat,ta[imon,jlev,:,:],levels=220+np.arange(11)*10,cmap='bwr',extend='both')
-plt.colorbar(orientation='horizontal')
-plt.title('Temperature month= %i @ %i mb' % (imon+1,lev[jlev]))
+    # Lon/lat wind plot
+    plt.figure()
+    imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
+    jlev = 20 # CHANGEME (0 = 1 mb, 22 = 1000 mb)
+    quiv_int = 5
+    map_setup(0,360,-90,90,'none','none','none','black')
+    plt.contourf(lon,lat,np.sqrt(ua[imon,jlev,:,:]**2+va[imon,jlev,:,:]**2),levels=np.arange(10)*2,cmap='Reds')
+    plt.colorbar(orientation='horizontal')
+    scale_arr = 1
+    wnd_map = plt.quiver(lon,lat,ua[imon,jlev,:,:],va[imon,jlev,:,:],units='xy')
+    plt.quiverkey(wnd_map,0.9,1.1,scale_arr,str(scale_arr))
+    plt.title('Winds month= %i @ %i mb' % (imon+1,lev[jlev]))
 
 
-# Lon/lat omega plot
-plt.figure()
-imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
-jlev = 13 # CHANGEME (0 = 1 mb, 22 = 1000 mb)
-map_setup(0,360,-90,90,'none','none','none','black')
-plt.contourf(lon,lat,wa[imon,jlev,:,:],levels=np.linspace(-0.2,0.2,11),cmap='bwr',extend='both')
-plt.colorbar(orientation='horizontal')
-plt.title('Pressure tendency month= %i @ %i mb' % (imon+1,lev[jlev]))
+    # Lon/lat temperature plot
+    plt.figure()
+    imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
+    jlev = 22 # CHANGEME (0 = 1 mb, 22 = 1000 mb)
+    map_setup(0,360,-90,90,'none','none','none','black')
+    plt.contourf(lon,lat,ta[imon,jlev,:,:],levels=220+np.arange(11)*10,cmap='bwr',extend='both')
+    plt.colorbar(orientation='horizontal')
+    plt.title('Temperature month= %i @ %i mb' % (imon+1,lev[jlev]))
 
 
-# Temperature(s) profiles
-plt.figure()
-imon = 0 # CHANGEME (0 = Jan, 11 = Dec)
-jlat = 36 # CHANGEME (0 = 90N, 72 = 90S)
-plt.plot(ta_zm[imon,:,jlat],lev,'k-',label='temp')
-plt.plot(theta_zm[imon,:,jlat],lev,'k--',label='theta')
-plt.yscale('log',basey=10)
-plt.ylim([1000,100])
-plt.xlim([200,400])
-plt.legend()
-plt.xlabel('T (K)')
-plt.ylabel('Pressure (mb)')
-plt.title('Temperature month= %i @ lat= %i' % (imon+1,lat[jlat]))
+    # Lon/lat omega plot
+    plt.figure()
+    imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
+    jlev = 13 # CHANGEME (0 = 1 mb, 22 = 1000 mb)
+    map_setup(0,360,-90,90,'none','none','none','black')
+    plt.contourf(lon,lat,wa[imon,jlev,:,:],levels=np.linspace(-0.2,0.2,11),cmap='bwr',extend='both')
+    plt.colorbar(orientation='horizontal')
+    plt.title('Pressure tendency month= %i @ %i mb' % (imon+1,lev[jlev]))
 
-plt.figure()
-imon = 0 # CHANGEME (0 = Jan, 11 = Dec)
-jlat = 25 # CHANGEME (0 = 90N, 72 = 90S)
-plt.plot(theta_zm[imon,:,jlat],lev,'k-',label='theta')
-plt.plot(thetae_zm[imon,:,jlat],lev,'k--',label='thetae')
-plt.yscale('log',basey=10)
-plt.ylim([1000,100])
-plt.xlim([250,350])
-plt.legend()
-plt.xlabel('T (K)')
-plt.ylabel('Pressure (mb)')
-plt.title('Potential temperature month= %i @ lat= %i' % (imon+1,lat[jlat]))
+
+    # Temperature(s) profiles
+    plt.figure()
+    imon = 0 # CHANGEME (0 = Jan, 11 = Dec)
+    jlat = 36 # CHANGEME (0 = 90N, 72 = 90S)
+    plt.plot(ta_zm[imon,:,jlat],lev,'k-',label='temp')
+    plt.plot(theta_zm[imon,:,jlat],lev,'k--',label='theta')
+    plt.yscale('log',basey=10)
+    plt.ylim([1000,100])
+    plt.xlim([200,400])
+    plt.legend()
+    plt.xlabel('T (K)')
+    plt.ylabel('Pressure (mb)')
+    plt.title('Temperature month= %i @ lat= %i' % (imon+1,lat[jlat]))
+
+    plt.figure()
+    imon = 0 # CHANGEME (0 = Jan, 11 = Dec)
+    jlat = 25 # CHANGEME (0 = 90N, 72 = 90S)
+    plt.plot(theta_zm[imon,:,jlat],lev,'k-',label='theta')
+    plt.plot(thetae_zm[imon,:,jlat],lev,'k--',label='thetae')
+    plt.yscale('log',basey=10)
+    plt.ylim([1000,100])
+    plt.xlim([250,350])
+    plt.legend()
+    plt.xlabel('T (K)')
+    plt.ylabel('Pressure (mb)')
+    plt.title('Potential temperature month= %i @ lat= %i' % (imon+1,lat[jlat]))
+
+
+
+if make_tran is True: 
+
+   var_am = ta_am; var_pp = ta_pp; var_ss = ta_ss; var_name = 'Sensible heat' 
+
+   plt.figure() 
+   clevs = np.linspace(-10,10,11) 
+   plt.contour(lat,lev,np.mean(np.mean(va_pp*var_pp,axis=0),axis=2),levels=clevs,colors='k')
+   plt.contourf(lat,lev,np.mean(np.mean(va_pp*var_pp,axis=0),axis=2),levels=clevs,cmap='bwr')
+   plt.xlim([-80,80])
+   plt.ylim([1000,150])
+   plt.colorbar(orientation='horizontal')
+   plt.xlabel('Latitude (deg)')
+   plt.ylabel('Pressure (mb)')
+   plt.title(var_name+' -- transient eddies (scaled degC m/s)') 
+
+   plt.figure() 
+   clevs = np.linspace(-5,5,11)
+   plt.contour(lat,lev,np.mean(np.mean(va_ss,axis=0)*np.mean(var_ss,axis=0),axis=2),levels=clevs,colors='k')
+   plt.contourf(lat,lev,np.mean(np.mean(va_ss,axis=0)*np.mean(var_ss,axis=0),axis=2),levels=clevs,cmap='bwr')  
+   plt.xlim([-80,80])
+   plt.ylim([1000,150])
+   plt.colorbar(orientation='horizontal')
+   plt.xlabel('Latitude (deg)')
+   plt.ylabel('Pressure (mb)')
+   plt.title(var_name+' -- stationary eddies (scaled degC m/s)') 
+
+   plt.figure() 
+   clevs = np.linspace(-500,500,11)
+   plt.contour(lat,lev,np.mean(va_am,axis=2)*np.mean(var_am,axis=2),levels=clevs,colors='k')
+   plt.contourf(lat,lev,np.mean(va_am,axis=2)*np.mean(var_am,axis=2),levels=clevs,cmap='bwr')  
+   plt.xlim([-80,80])
+   plt.ylim([1000,150])
+   plt.colorbar(orientation='horizontal')
+   plt.xlabel('Latitude (deg)')
+   plt.ylabel('Pressure (mb)')
+   plt.title(var_name+' -- mean circulation (scaled degC m/s)') 
+
+   # lev 12 = 200, lev 22 = 1000, to average on them. limit to 60 deg
 
 
 plt.show()
