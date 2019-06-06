@@ -148,7 +148,8 @@ if make_clim is True:
 
 if make_tran is True: 
 
-   var_am = ta_am; var_pp = ta_pp; var_ss = ta_ss; var_name = 'Sensible heat' 
+   # Fig 13.5 PO92
+   var_am = ta_am; var_pp = ta_pp; var_ss = ta_ss; var_name = 'Sensible heat'; var_uni = 'K m/s' 
 
    plt.figure() 
    clevs = np.linspace(-10,10,11) 
@@ -159,7 +160,7 @@ if make_tran is True:
    plt.colorbar(orientation='horizontal')
    plt.xlabel('Latitude (deg)')
    plt.ylabel('Pressure (mb)')
-   plt.title(var_name+' -- transient eddies (scaled degC m/s)') 
+   plt.title(var_name+' -- transient eddies ('+var_uni+')') 
 
    plt.figure() 
    clevs = np.linspace(-5,5,11)
@@ -170,7 +171,7 @@ if make_tran is True:
    plt.colorbar(orientation='horizontal')
    plt.xlabel('Latitude (deg)')
    plt.ylabel('Pressure (mb)')
-   plt.title(var_name+' -- stationary eddies (scaled degC m/s)') 
+   plt.title(var_name+' -- stationary eddies ('+var_uni+')') 
 
    plt.figure() 
    clevs = np.linspace(-500,500,11)
@@ -181,9 +182,26 @@ if make_tran is True:
    plt.colorbar(orientation='horizontal')
    plt.xlabel('Latitude (deg)')
    plt.ylabel('Pressure (mb)')
-   plt.title(var_name+' -- mean circulation (scaled degC m/s)') 
+   plt.title(var_name+' -- mean circulation ('+var_uni+')') 
 
-   # lev 12 = 200, lev 22 = 1000, to average on them. limit to 60 deg
+   # Annual mean time series (TODO add weighting)
+   levt = lev[12:23] # 200-1000 hPa
+   ts_tran = np.mean(np.mean(np.mean(va_pp*var_pp,axis=0),axis=2)[12:23,:],axis=0)
+   ts_stat = np.mean(np.mean(np.mean(va_ss,axis=0)*np.mean(var_ss,axis=0),axis=2)[12:23,:],axis=0)
+   ts_mean = np.mean(np.mean(va_am,axis=2)[12:23,:]*np.mean(var_am,axis=2)[12:23,:],axis=0)
+
+   plt.figure()
+   plt.plot(lat,ts_tran*10,'k-',label='10x trans')
+   plt.plot(lat,ts_stat*10,'k--',label='10x stat')
+   plt.plot(lat,ts_mean,'k:',label='mean')
+   plt.xlim([-60,60])  
+   plt.ylim([-40,40])  
+   plt.axhline(0,color='grey')
+   plt.xlabel('Latitude (deg)')
+   plt.ylabel('Northward flux ('+var_uni+')')
+   plt.legend()
+   plt.show()
+
 
 
 plt.show()
