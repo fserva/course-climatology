@@ -142,14 +142,14 @@ if make_tran is True:
    plt.ylabel('Depth (m)')
    plt.title(var_name+' -- mean circulation ('+var_uni+')') 
 
+   # TODO add meridional profiles
    # Layer thickness
-   levp = np.append(lev[1::],lev[-1])
-   dlev = levp-lev
-
-   plt.figure()
+   #levp = np.append(lev[1::],lev[-1])
+   #dlev = levp-lev
+   #plt.figure()
    #plt.plot(lat,vo_am[23,:,-30]*var_am[23,:,-30])
    #plt.plot(lat,np.sum(np.mean(vo_am,axis=2)*np.mean(var_am,axis=2)*dlev[:,None],axis=0))
-   plt.plot(lat,np.sum((vo_am[:,:,-33]*var_am[:,:,-33]*dlev[:,None])[0:15],axis=0))
+   #plt.plot(lat,np.sum((vo_am[:,:,-33]*var_am[:,:,-33]*dlev[:,None])[0:15],axis=0))
 
    plt.show()
    
