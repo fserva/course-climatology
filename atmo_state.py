@@ -85,15 +85,15 @@ if make_clim is True:
 
     # Lon/lat wind plot
     plt.figure()
-    imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
+    imon = 6 # CHANGEME (0 = Jan, 11 = Dec)
     jlev = 20 # CHANGEME (0 = 1 mb, 22 = 1000 mb)
     quiv_int = 5
     map_setup(0,360,-90,90,'none','none','none','black')
     plt.contourf(lon,lat,np.sqrt(ua[imon,jlev,:,:]**2+va[imon,jlev,:,:]**2),levels=np.arange(10)*2,cmap='Reds')
     plt.colorbar(orientation='horizontal')
-    scale_arr = 1
-    wnd_map = plt.quiver(lon,lat,ua[imon,jlev,:,:],va[imon,jlev,:,:],units='xy')
-    plt.quiverkey(wnd_map,0.9,1.1,scale_arr,str(scale_arr))
+    scale_arr = 50
+    wnd_map = plt.quiver(lon,lat,ua[imon,jlev,:,:],va[imon,jlev,:,:])#,units='xy')
+    plt.quiverkey(wnd_map,X=0.9,Y=1.1,U=scale_arr,label=str(scale_arr))
     plt.title('Winds month= %i @ %i mb' % (imon+1,lev[jlev]))
 
 
@@ -110,7 +110,7 @@ if make_clim is True:
     # Lon/lat omega plot
     plt.figure()
     imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
-    jlev = 13 # CHANGEME (0 = 1 mb, 22 = 1000 mb)
+    jlev = 15 # CHANGEME (0 = 1 mb, 22 = 1000 mb)
     map_setup(0,360,-90,90,'none','none','none','black')
     plt.contourf(lon,lat,wa[imon,jlev,:,:],levels=np.linspace(-0.2,0.2,11),cmap='bwr',extend='both')
     plt.colorbar(orientation='horizontal')

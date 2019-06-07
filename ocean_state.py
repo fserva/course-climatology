@@ -55,6 +55,7 @@ theta = ma.masked_array(theta,mask=theta>330)
 var_file.close()
 
 
+# Select here the longitude band (vo = vo[:,:,:,-60:0])
 theta_am, theta_zm, theta_pp, theta_ss = comp_stat(theta)
 vo_am, vo_zm, vo_pp, vo_ss = comp_stat(vo)
 

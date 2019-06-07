@@ -58,8 +58,8 @@ alb_2d[np.where(alb_2d == 999.99)] = float('nan')
 #csa_2d =  np.array([float(row.split()[1]) for row in erbe_2d],dtype='f')
 
 # Define regular lon/lat grid at 2.5 deg step
-lon_rg = np.linspace(0,357.5,(360/2.5))
-lat_rg = np.linspace(-90,90,(180/2.5)+1)
+lon_rg = np.linspace(0,357.5,int(360/2.5))
+lat_rg = np.linspace(-90,90,int(180/2.5)+1)
 
 # Define regridded variables
 sw_rg  = np.zeros((len(lon_rg),len(lat_rg)),dtype='f')
