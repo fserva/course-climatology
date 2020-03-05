@@ -10,3 +10,10 @@ Contents of the lessons (list being updated):
 - Atmosphere and ocean climatology
 - Atmosphere and ocean transport
 
+Software (every OS): 
+A local installation of python is required. You can use `miniconda`
+https://docs.conda.io/projects/conda/en/latest/user-guide/install/
+and download the needed packages following
+https://docs.anaconda.com/anaconda/user-guide/tasks/install-packages/
+
+
