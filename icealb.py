@@ -12,9 +12,9 @@ diagram is prepared)
 v 0.1: first version April 2019
 """
 
-
+# Read the solar constant (W/m2), if provided
 if len(sys.argv) == 1:
-    l_o = 1300. # solar constant (W/m2)
+    l_o = 1300.
 
 if len(sys.argv) > 1:
     l_o = int(sys.argv[1])
