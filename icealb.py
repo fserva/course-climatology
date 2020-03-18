@@ -60,6 +60,8 @@ prad = 900 - np.arange(plen)*pincr
 
 plt.subplot(3,1,2)
 plt.plot(temp,flux_in,'k',zorder=10,label='in')
+
+# Loop over pressures
 for ipress in range(plen):
 
     if blackbody is True: 
@@ -101,3 +103,5 @@ else:
 
 plt.tight_layout()
 plt.show()
+#plt.savefig('CHANGEME.png',format='png') # save png, change name as needed
+
