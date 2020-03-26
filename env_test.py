@@ -47,5 +47,25 @@ if do_plot is True:
     plt.show()
  
 
+# An example of function, with a block 
+# description at the beginning
+def myfunction(myvalue):
+    """ Define a function with this 
+    structure, as an indented block. 
+    The strings in the () are the function 
+    input parameters. 
+    Make some calculation, then return 
+    some output (migh be None) """
+    myoutput = myvalue**2 # square
+    return myoutput 
+
+# Simply call any function with its name, 
+# output(s) = function name (parameter1,...parameterN)
+squared_value = myfunction(100)
+print(squared_value)
+
+
+
+
 
 
