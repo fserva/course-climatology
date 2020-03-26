@@ -1,5 +1,4 @@
 # course-climatogy
-Software for the practical part of the course
 
 Material for the 'climatology' course at the University of Rome Tor Vergata.
 Last updated for the 2020 term.
