@@ -32,7 +32,7 @@ data_path = './radiation_data/' # CHANGEME
 """
 
 # Open ERBE year/month 2D data, and select columns
-erbe_2d = np.genfromtxt(data_path+'ERBE_07_1987.txt',\
+erbe_2d = np.genfromtxt(data_path+'ERBE_01_1987.txt',\
                         skip_header=19,dtype='str',delimiter='?')
 
 lat_2d = np.array([float(row.split()[0]) for row in erbe_2d],dtype='f') 
@@ -156,7 +156,7 @@ for mon in range(12):
                  (100.-alb_1d[ind_mon,mon+1])*lat_wgt[ind_mon])/np.sum(lat_wgt[ind_mon])
 
 
-ind_ann = np.where(alb_1d[:,13] > 0)
+ind_ann = np.where(alb_1d[:,13] > 0) # Exclude missing values
 abs_ann = np.squeeze(sw_1d[ind_ann,13]/alb_1d[ind_ann,13]*(100.-alb_1d[ind_ann,13]))
 
 if make_ts is True:
@@ -177,6 +177,7 @@ if make_ts is True:
     plt.plot(lat_1d,abs_ann,label='abs')
     plt.plot(lat_1d,olr_1d[:,13],label='olr')
     plt.plot(lat_1d,net_1d[:,13],label='net')
+    # Effects of correction
     plt.plot(lat_1d,abs_ann-olr_1d[:,13],label='abs-olr')
     plt.xlabel('Latitude [deg]')
     plt.ylabel('Flux [W/m2]')
