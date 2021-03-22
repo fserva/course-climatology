@@ -1,0 +1,15 @@
+channels:
+  - conda-forge
+dependencies:
+  - numpy
+  - matplotlib
+  - python=3.6
+  - cartopy
+  - scikit-image
+  - basemap
+  # Jupyter Environment
+  - notebook
+  - ipython
+  - jupyter_contrib_nbextensions
+  - jupyterlab
+  - nb_conda
