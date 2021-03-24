@@ -9,9 +9,9 @@ from mpl_toolkits.basemap import Basemap # library for maps
 
 
 # 'Arrays' of objects
-list_int = [1,2,3]
-list_str = ['a','b','c']
-tupl_int = (4,5,6)
+list_int = [1,2,3] # list
+list_str = ['a','b','c'] # list
+tupl_int = (4,5,6) # tuple
 
 # One can change a list item (by index)
 list_int[1] = 100.
@@ -55,7 +55,7 @@ def myfunction(myvalue):
     The strings in the () are the function 
     input parameters. 
     Make some calculation, then return 
-    some output (migh be None) """
+    some output (it might be None) """
     myoutput = myvalue**2 # square
     return myoutput 
 
