@@ -1,15 +1,12 @@
+name: envclim
 channels:
   - conda-forge
 dependencies:
   - numpy
   - matplotlib
-  - python=3.6
+  - python
   - cartopy
-  - scikit-image
-  - basemap
   # Jupyter Environment
   - notebook
   - ipython
-  - jupyter_contrib_nbextensions
-  - jupyterlab
   - nb_conda
