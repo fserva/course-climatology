@@ -6,7 +6,4 @@ dependencies:
   - matplotlib
   - python
   - cartopy
-  # Jupyter Environment
-  - notebook
-  - ipython
-  - nb_conda
+  - spyder
