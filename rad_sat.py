@@ -1,24 +1,32 @@
 #!/usr/bin/env python
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.basemap import Basemap
 
 # Setup parameters and constants
-make_maps = False  # Show global maps
-make_ts   = True   # Show zonal averages
+make_maps = True  # Show global maps
+make_ts   = False   # Show zonal averages
 dgrid = 2.5        # ERBE data resolution (degrees)
 r_e = 6.371*1E6    # Earth radius (m)
 
-# Define a Basemap object for plotting
-def map_setup(lon1,lon2,lat1,lat2,col_con,col_lake,col_sea,col_bound):
-    mymap = Basemap(projection='cyl',llcrnrlon=lon1, urcrnrlon=lon2, \
-            llcrnrlat=lat1, urcrnrlat=lat2, \
-            lon_0=0, lat_0=0, resolution='c')
-    # Add coastlines, meridian and parallel lines 
-    mymap.drawcoastlines(color=col_bound,linewidth=.35)
-    mymap.drawmeridians(np.arange(0,360,30),color='gray',linewidth=.25)
-    mymap.drawparallels(np.arange(-90,90,30),color='gray',linewidth=.25)
-    return mymap
+# Select the background map library
+#map_type = 'nomap'
+map_type = 'basemap'
+#map_type = 'cartopy'
+
+
+if map_type == 'basemap':
+
+    from mpl_toolkits.basemap import Basemap
+    # Define a Basemap object for plotting
+    def map_setup(lon1,lon2,lat1,lat2,col_con,col_lake,col_sea,col_bound):
+        mymap = Basemap(projection='cyl',llcrnrlon=lon1, urcrnrlon=lon2, \
+                        llcrnrlat=lat1, urcrnrlat=lat2, \
+                        lon_0=0, lat_0=0, resolution='c')
+        # Add coastlines, meridian and parallel lines 
+        mymap.drawcoastlines(color=col_bound,linewidth=.35)
+        mymap.drawmeridians(np.arange(0,360,30),color='gray',linewidth=.25)
+        mymap.drawparallels(np.arange(-90,90,30),color='gray',linewidth=.25)
+        return mymap
 
 
 # *** Lat/Lon global maps ***
@@ -96,28 +104,43 @@ if make_maps is True:
     #lw_levs  = ... TODO
 
     plt.figure()
-    map_setup(0,360,-90,90,'none','none','none','black')
+
+    if map_type == 'basemap':
+        map_setup(0,360,-90,90,'none','none','none','black')
+
     plt.contourf(lon_rg,lat_rg,alb_rg.T,
                  levels=alb_levs,cmap='Blues_r',extend='max')
     plt.colorbar(orientation='horizontal')
     plt.title('Albedo [%]')
 
+
     plt.figure()
-    map_setup(0,360,-90,90,'none','none','none','black')
+
+    if map_type == 'basemap':
+        map_setup(0,360,-90,90,'none','none','none','black')
+
     plt.contourf(lon_rg,lat_rg,sw_rg.T,
                  levels=sw_levs,cmap='Oranges_r',extend='max')
     plt.colorbar(orientation='horizontal')
     plt.title('Reflected SW [W/m2]')
 
+
     plt.figure()
-    map_setup(0,360,-90,90,'none','none','none','black')
+
+    if map_type == 'basemap':
+        map_setup(0,360,-90,90,'none','none','none','black')
+
     plt.contourf(lon_rg,lat_rg,sw_in.T,
                  levels=in_levs,cmap='Oranges',extend='max')
     plt.colorbar(orientation='horizontal')
     plt.title('Incoming SW [W/m2]')
 
+
     plt.figure()
-    map_setup(0,360,-90,90,'none','none','none','black')
+
+    if map_type == 'basemap':
+        map_setup(0,360,-90,90,'none','none','none','black')
+
     plt.contourf(lon_rg,lat_rg,(sw_in*(100-alb_rg)/100).T,
                  levels=abs_levs,cmap='Oranges',extend='max')
     plt.colorbar(orientation='horizontal')
