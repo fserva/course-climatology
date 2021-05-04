@@ -9,8 +9,8 @@ dgrid = 2.5        # ERBE data resolution (degrees)
 r_e = 6.371*1E6    # Earth radius (m)
 
 # Select the background map library
-#map_type = 'nomap'
-map_type = 'basemap'
+map_type = 'nomap'
+#map_type = 'basemap'
 #map_type = 'cartopy'
 
 
@@ -27,6 +27,14 @@ if map_type == 'basemap':
         mymap.drawmeridians(np.arange(0,360,30),color='gray',linewidth=.25)
         mymap.drawparallels(np.arange(-90,90,30),color='gray',linewidth=.25)
         return mymap
+
+
+if map_type == 'cartopy':
+    import cartopy.crs as ccrs
+    def map_setup():
+        ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=180.))
+        ax.coastlines()
+        return ax
 
 
 # *** Lat/Lon global maps ***
@@ -108,8 +116,14 @@ if make_maps is True:
     if map_type == 'basemap':
         map_setup(0,360,-90,90,'none','none','none','black')
 
-    plt.contourf(lon_rg,lat_rg,alb_rg.T,
-                 levels=alb_levs,cmap='Blues_r',extend='max')
+    if map_type == 'cartopy': # use transform keyword
+        map_setup() 
+        plt.contourf(lon_rg,lat_rg,alb_rg.T,levels=alb_levs,cmap='Blues_r',
+                     extend='max',transform=ccrs.PlateCarree())
+
+    if map_type in ['nomap','basemap']: # no transform
+        plt.contourf(lon_rg,lat_rg,alb_rg.T,levels=alb_levs,cmap='Blues_r', extend='max')
+
     plt.colorbar(orientation='horizontal')
     plt.title('Albedo [%]')
 
@@ -119,8 +133,15 @@ if make_maps is True:
     if map_type == 'basemap':
         map_setup(0,360,-90,90,'none','none','none','black')
 
-    plt.contourf(lon_rg,lat_rg,sw_rg.T,
-                 levels=sw_levs,cmap='Oranges_r',extend='max')
+    if map_type == 'cartopy': # use transform keyword
+        map_setup() 
+        plt.contourf(lon_rg,lat_rg,sw_rg.T,levels=sw_levs,cmap='Oranges_r',
+                     extend='max',transform=ccrs.PlateCarree())
+
+    if map_type in ['nomap','basemap']: # no transform
+        plt.contourf(lon_rg,lat_rg,sw_rg.T,
+                     levels=sw_levs,cmap='Oranges_r',extend='max')
+
     plt.colorbar(orientation='horizontal')
     plt.title('Reflected SW [W/m2]')
 
@@ -130,8 +151,15 @@ if make_maps is True:
     if map_type == 'basemap':
         map_setup(0,360,-90,90,'none','none','none','black')
 
-    plt.contourf(lon_rg,lat_rg,sw_in.T,
-                 levels=in_levs,cmap='Oranges',extend='max')
+    if map_type == 'cartopy': # use transform keyword
+        map_setup() 
+        plt.contourf(lon_rg,lat_rg,sw_in.T,levels=in_levs,cmap='Oranges',
+                     extend='max',transform=ccrs.PlateCarree())
+
+    if map_type in ['nomap','basemap']: # no transform
+        plt.contourf(lon_rg,lat_rg,sw_in.T,
+                     levels=in_levs,cmap='Oranges',extend='max')
+
     plt.colorbar(orientation='horizontal')
     plt.title('Incoming SW [W/m2]')
 
@@ -141,13 +169,17 @@ if make_maps is True:
     if map_type == 'basemap':
         map_setup(0,360,-90,90,'none','none','none','black')
 
-    plt.contourf(lon_rg,lat_rg,(sw_in*(100-alb_rg)/100).T,
-                 levels=abs_levs,cmap='Oranges',extend='max')
+    if map_type == 'cartopy': # use transform keyword
+        map_setup() 
+        plt.contourf(lon_rg,lat_rg,(sw_in*(100-alb_rg)/100).T,levels=abs_levs,
+                     cmap='Oranges',extend='max',transform=ccrs.PlateCarree())
+
+    if map_type in ['nomap','basemap']: # no transform
+        plt.contourf(lon_rg,lat_rg,(sw_in*(100-alb_rg)/100).T,
+                     levels=abs_levs,cmap='Oranges',extend='max')
+
     plt.colorbar(orientation='horizontal')
     plt.title('(1-A) SW [W/m2]')
-
-
-
 
 
 
