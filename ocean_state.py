@@ -2,23 +2,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import netCDF4 as nc4
-from mpl_toolkits.basemap import Basemap
 import numpy.ma as ma
 
 # Setup parameters and constants
 make_clim = 1
 make_tran = True
 
-# Define a Basemap object for plotting
-def map_setup(lon1,lon2,lat1,lat2,col_con,col_lake,col_sea,col_bound):
-    mymap = Basemap(projection='cyl',llcrnrlon=lon1, urcrnrlon=lon2, \
-            llcrnrlat=lat1, urcrnrlat=lat2, \
-            lon_0=0, lat_0=0, resolution='c')
-    # Add coastlines, meridian and parallel lines 
-    mymap.drawcoastlines(color=col_bound,linewidth=.35)
-    mymap.drawmeridians(np.arange(0,360,30),color='gray',linewidth=.25)
-    mymap.drawparallels(np.arange(-90,90,30),color='gray',linewidth=.25)
-    return mymap
+# Select the background map library
+map_type = 'nomap'
+#map_type = 'basemap'
+#map_type = 'cartopy'
+
+if map_type == 'basemap':
+    from mpl_toolkits.basemap import Basemap
+    # Define a Basemap object for plotting
+    def map_setup(lon1,lon2,lat1,lat2,col_con,col_lake,col_sea,col_bound):
+        mymap = Basemap(projection='cyl',llcrnrlon=lon1, urcrnrlon=lon2, \
+                        llcrnrlat=lat1, urcrnrlat=lat2, \
+                        lon_0=0, lat_0=0, resolution='c')
+        # Add coastlines, meridian and parallel lines 
+        mymap.drawcoastlines(color=col_bound,linewidth=.35)
+        mymap.drawmeridians(np.arange(0,360,30),color='gray',linewidth=.25)
+        mymap.drawparallels(np.arange(-90,90,30),color='gray',linewidth=.25)
+        return mymap
+
+if map_type == 'cartopy':
+    import cartopy.crs as ccrs
+    def map_setup():
+        ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=180.))
+        ax.coastlines()
+        return ax
 
 
 # Compute annual and zonal means, and deviations
@@ -80,8 +93,19 @@ if make_clim is True:
     imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
     jlev = 10 # CHANGEME (0 = 5 m, 39 = 5000 m)
     quiv_int = 5
-    map_setup(0,360,-90,90,'none','none','none','black')
-    plt.contourf(lon,lat,np.sqrt(uo[imon,jlev,:,:]**2+vo[imon,jlev,:,:]**2),levels=np.arange(10)*0.1,cmap='Reds')
+
+    if map_type == 'basemap':
+        map_setup(0,360,-90,90,'none','none','none','black')
+
+    if map_type == 'cartopy': # use transform keyword
+        map_setup()
+        plt.contourf(lon,lat,np.sqrt(uo[imon,jlev,:,:]**2+vo[imon,jlev,:,:]**2),
+                     levels=np.arange(10)*0.1,cmap='Reds',transform=ccrs.PlateCarree())
+
+    if map_type in ['nomap','basemap']: # no transform
+        plt.contourf(lon,lat,np.sqrt(uo[imon,jlev,:,:]**2+vo[imon,jlev,:,:]**2),
+                     levels=np.arange(10)*0.1,cmap='Reds')
+
     plt.colorbar(orientation='horizontal')
     #scale_arr = 1
     #curr_map = plt.quiver(lon,lat,ucur[imon,jlev,:,:],vcur[imon,jlev,:,:],units='xy')
@@ -93,8 +117,19 @@ if make_clim is True:
     plt.figure()
     imon = 7 # CHANGEME (0 = Jan, 11 = Dec)
     jlev = 39 # CHANGEME (0 = 5 m, 39 = 5000 m)
-    map_setup(0,360,-90,90,'none','none','none','black')
-    plt.contourf(lon,lat,theta[imon,jlev,:,:],levels=270+np.arange(11)*3,cmap='bwr',extend='both')
+
+    if map_type == 'basemap':
+        map_setup(0,360,-90,90,'none','none','none','black')
+
+    if map_type == 'cartopy': # use transform keyword
+        map_setup()
+        plt.contourf(lon,lat,theta[imon,jlev,:,:],levels=270+np.arange(11)*3,
+                     cmap='bwr',extend='both',transform=ccrs.PlateCarree())
+
+    if map_type in ['nomap','basemap']: # no transform
+        plt.contourf(lon,lat,theta[imon,jlev,:,:],levels=270+np.arange(11)*3,
+                     cmap='bwr',extend='both')
+
     plt.colorbar(orientation='horizontal')
     plt.title('Theta month= %i @ %i m' % (imon+1,lev[jlev]))
 
