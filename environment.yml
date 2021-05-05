@@ -7,3 +7,4 @@ dependencies:
   - python
   - cartopy
   - spyder
+  - netcdf4
