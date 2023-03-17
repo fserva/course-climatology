@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
+import sys # warning: only works from command line, no spyder or notebook!
 
 """ 
 Based on Pierrehumbert's script for ice-albedo
