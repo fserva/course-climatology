@@ -2,14 +2,16 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sys # warning: only works from command line, no spyder or notebook!
+import sys
 
 """ 
 Based on Pierrehumbert's script for ice-albedo
 feedbacks, with some simplifications (e.g. no bifurcation
 diagram is prepared)
 
-v 0.1: first version April 2019
+Warning: `sys` only works from command line. If using spyder
+or notebook version, then explictly assign `l_o` value
+as done for other variables
 """
 
 # Read the solar constant (W/m2), if provided
