@@ -252,6 +252,9 @@ if make_tran is True:
    plt.legend()
    plt.show()
 
-
-
 plt.show()
+
+
+# Note: for computing vertical integrals, you can use 
+# https://numpy.org/doc/stable/reference/generated/numpy.trapz.html#
+# but be careful -- dx is not constant!
