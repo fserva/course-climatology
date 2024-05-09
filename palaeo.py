@@ -6,6 +6,11 @@ import matplotlib.pyplot as plt
 # Location of the txt files. Adapt as needed.
 data_path = './palaeo_data/'
 
+# Warning: EPICA files may give you system-dependent coding errors.
+# In case, delete the header (whole or in part) and adjust the 
+# `skiprows` value accordingly. 
+# Remember to make a copy of the file before changing it!
+
 # Open EPICA deuterium data skipping header
 # 6 columns: Top depth, bottom depth, top age, bottom age, mean age, dD
 epica_2h_1 = np.loadtxt(data_path+'EpicaDeuteriumPart1.txt',skiprows=96)
@@ -30,7 +35,6 @@ epica_co2 = np.loadtxt(data_path+'EPICACO2.txt',skiprows=1)
 # Open insolation data of Berger 1990
 # 9 columns: time, eccentricity, omega, obliquity, precession, 65N Jul, 15N Jul, 15S Jan
 orbit = np.loadtxt(data_path+'orbit91',skiprows=2)
-
 
 # Basic FFT function
 def fft(time,ts):
@@ -115,8 +119,8 @@ orbit_freq, pre_fft = fft(-orbit[:,0],orbit[:,4])
 plt.plot(orbit_freq[1:],ecc_fft[1:],color='b',label='ecc')
 plt.plot(orbit_freq[1:],obl_fft[1:],color='k',label='obl')
 plt.plot(orbit_freq[1:],pre_fft[1:],color='r',label='prec')
-plt.yscale('log',basey=10)
-plt.xscale('log',basex=10)
+plt.yscale('log',base=10)
+plt.xscale('log',base=10)
 plt.xlim([1e-3,1e-1])
 plt.ylim([1E-5,1])
 plt.xlabel('Freq [kyr-1]')
