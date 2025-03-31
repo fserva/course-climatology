@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import sys
 
@@ -42,6 +43,11 @@ temp = 150. + np.arange(tlen)
 alpha = np.zeros(tlen,dtype='f')
 olr = np.zeros(tlen,dtype='f')
 eq_pts = np.zeros((n_eq,plen),dtype='i')
+
+# Extract colors for equilibrium points, with
+# colors e.g. from dark to bright.
+cmap = mpl.colormaps['jet']
+colors = cmap(np.linspace(0, 1, plen))
 
 # Compute albedo as function of temperature
 alpha[np.where(temp < temp_i)[0]] = alpha_i
@@ -91,9 +97,14 @@ plt.legend()
 
 plt.subplot(3,1,3)
 if blackbody is True:
-    plt.plot(prad,temp[np.squeeze(eq_pts[0,:])],ls='',marker='*',color='b')
-    plt.plot(prad,temp[np.squeeze(eq_pts[1,:])],ls='',marker='*',color='grey')
-    plt.plot(prad,temp[np.squeeze(eq_pts[2,:])],ls='',marker='*',color='r')
+
+    for ipress in range(plen):
+        plt.plot(prad[ipress],temp[np.squeeze(eq_pts[0,ipress])],
+                 ls='',marker='*',color=colors[ipress])
+        plt.plot(prad[ipress],temp[np.squeeze(eq_pts[1,ipress])],
+                 ls='',marker='*',color=colors[ipress])
+        plt.plot(prad[ipress],temp[np.squeeze(eq_pts[2,ipress])],
+                 ls='',marker='*',color=colors[ipress])
     plt.xlim([max(prad),min(prad)])
     plt.ylim([200,350])
     plt.axhline(temp_i,color='b')
