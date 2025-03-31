@@ -15,11 +15,10 @@ or notebook version, then explictly assign `l_o` value
 as done for other variables
 """
 
-# Read the solar constant (W/m2), if provided
+# Read the solar constant (W/m2), if provided.
 if len(sys.argv) == 1:
     l_o = 1300.
-
-if len(sys.argv) > 1:
+else:
     l_o = int(sys.argv[1])
 
 # Constant and setup parameters
